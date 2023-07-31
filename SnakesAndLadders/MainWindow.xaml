@@ -1,0 +1,1684 @@
+﻿<Window x:Class="SnakesAndLadders.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SnakesAndLadders"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=local:MainWindow, IsDesignTimeCreatable=True}" 
+        UseLayoutRounding="True"
+        Title="Snakes and Ladders" Height="450" Width="800" MinHeight="650" MinWidth="1000"
+        Icon="C:\Users\timta\Downloads\SnakesAndLadders\SnakesAndLadders\bin\Debug\net5.0-windows\Snake.ico">
+    <Window.Resources>
+        <local:PlayersConverter x:Key="PlayersConverter"/>
+        <local:WinnerConverter x:Key="WinnerConverter"/>
+
+        <Style TargetType="Button" x:Key="Pages">
+            <Setter Property="Padding" Value="5,15,5,15"/>
+            <Setter Property="Margin" Value="20,20,20,20"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{Binding Brown}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="IsTabStop" Value="True"/>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="ButtonText">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style TargetType="Button" x:Key="Play">
+            <Setter Property="Margin" Value="20"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="{Binding Brown}"/>
+            <Setter Property="Background" Value="{Binding Lighten}"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="30"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="12,15,12,15"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Background" Value="{Binding Brown}"/>
+                </Trigger>
+                <Trigger Property="IsMouseCaptured" Value="True">
+                    
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="TextBlock" 
+               x:Key="Temp">
+            <Setter Property="Foreground" 
+                    Value="White"/>
+        </Style>
+
+        <Style TargetType="TabControl" x:Key="Custom">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style TargetType="Rectangle" x:Key="Highlighter">
+                <Setter Property="Fill" Value="{Binding Brown}"/>
+                <Setter Property="Width" Value="50"/>
+                <Setter Property="Height" Value="2"/>
+                <Setter Property="Margin" Value="0,3,0,0"/>
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </Style>
+        </Grid.Resources>
+
+        <Image Grid.Row="0" Grid.RowSpan="2" RenderOptions.BitmapScalingMode="Fant" Stretch="UniformToFill" Source="C:\Users\timta\Downloads\SnakesAndLadders\SnakesAndLadders\bin\Debug\net5.0-windows\MenuBackground.png"/>
+
+        <Rectangle Width="Auto" Height="5" VerticalAlignment="Top" 
+                   Fill="{Binding Brown}" Grid.Column="1"/>
+        
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" x:Name="StackpanelForPages">
+            <Button x:Name="Play" Style="{StaticResource Play}" Content="PLAY" Click="Play_OnClick"/>
+            
+            <Button x:Name="Page_0" Style="{StaticResource Pages}" Click="Page_OnClick">
+                <StackPanel x:Name="HomeSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="HOME"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource Pages}" x:Name="Page_1" Click="Page_OnClick">
+                <StackPanel x:Name="LeaderboardSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="LEADERBOARD"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+            
+            <Button Style="{StaticResource Pages}" x:Name="Page_2" Click="Page_OnClick" Visibility="Collapsed">
+                <StackPanel x:Name="GallerySP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="GALLERY"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource Pages}" x:Name="Page_3" Click="Page_OnClick">
+                <StackPanel x:Name="OptionsSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="OPTIONS"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource Pages}" x:Name="Page_4" Click="Page_OnClick" Visibility="Collapsed">
+                <StackPanel x:Name="TenXSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="10x10"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource Pages}" x:Name="Page_5" Click="Page_OnClick" Visibility="Collapsed">
+                <StackPanel x:Name="TwelveXSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="12x12"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+            
+            <Button Style="{StaticResource Pages}" x:Name="Page_6" Click="Page_OnClick" Visibility="Collapsed">
+                <StackPanel x:Name="FifteenXSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="15x15"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Style="{StaticResource Pages}" x:Name="Page_7" Click="Page_OnClick" Visibility="Collapsed">
+                <StackPanel x:Name="ResumeSP">
+                    <TextBlock Style="{StaticResource ButtonText}" Text="RESUME"/>
+                    <Rectangle Style="{StaticResource Highlighter}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+
+        <Button Content="START" 
+                Style="{StaticResource Play}"
+                Width="120"
+                HorizontalAlignment="Right"
+                x:Name="Start"
+                Visibility="Collapsed"
+                Click="Start_OnClick"/>
+
+        <Rectangle Width="Auto" Height="2" VerticalAlignment="Bottom" Fill="{Binding Brown}"/>
+
+        <TabControl Grid.Row="1" SelectedIndex="{Binding CurrentPage}" Style="{StaticResource Custom}" x:Name="MainTabControl">
+            <TabControl.Resources>
+                <Style TargetType="TabItem" x:Key="Headerless">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </TabControl.Resources>
+
+            <TabItem Style="{StaticResource Headerless}">
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="5*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid ShowGridLines="False" Grid.Row="1" Grid.Column="1" Background="{Binding BackgroundBrush}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="25"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="35"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <Style TargetType="ItemsControl">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                <Setter Property="FontSize" Value="14"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Style>
+                        </Grid.Resources>
+
+                        <TextBlock Text="10x10" Style="{StaticResource Header}"  Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3"/>
+                        <TextBlock Text="No." Style="{StaticResource Subheader}" Grid.Column="1" Grid.Row="3"/>
+                        <TextBlock Text="Name" Style="{StaticResource Subheader}" Grid.Column="2" Grid.Row="3"/>
+                        <TextBlock Text="Score" Style="{StaticResource Subheader}" Grid.Column="3" Grid.Row="3"/>
+                        <ItemsControl Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Leaderboardx10}" DisplayMemberPath="Index"/>
+                        <ItemsControl Grid.Column="2" Grid.Row="5" ItemsSource="{Binding Leaderboardx10}" DisplayMemberPath="Name"/>
+                        <ItemsControl Grid.Column="3" Grid.Row="5" ItemsSource="{Binding Leaderboardx10}" DisplayMemberPath="Score"/>
+
+                        <TextBlock Text="12x12" Style="{StaticResource Header}" Grid.Column="5" Grid.Row="1" Grid.ColumnSpan="3"/>
+                        <TextBlock Text="No." Style="{StaticResource Subheader}" Grid.Column="5" Grid.Row="3"/>
+                        <TextBlock Text="Name" Style="{StaticResource Subheader}" Grid.Column="6" Grid.Row="3"/>
+                        <TextBlock Text="Score" Style="{StaticResource Subheader}" Grid.Column="7" Grid.Row="3"/>
+                        <ItemsControl Grid.Column="5" Grid.Row="5" ItemsSource="{Binding Leaderboardx12}" DisplayMemberPath="Index"/>
+                        <ItemsControl Grid.Column="6" Grid.Row="5" ItemsSource="{Binding Leaderboardx12}" DisplayMemberPath="Name"/>
+                        <ItemsControl Grid.Column="7" Grid.Row="5" ItemsSource="{Binding Leaderboardx12}" DisplayMemberPath="Score"/>
+
+                        <TextBlock Text="15x15" Style="{StaticResource Header}" Grid.Column="9" Grid.Row="1" Grid.ColumnSpan="3"/>
+                        <TextBlock Text="No." Style="{StaticResource Subheader}" Grid.Column="9" Grid.Row="3"/>
+                        <TextBlock Text="Name" Style="{StaticResource Subheader}" Grid.Column="10" Grid.Row="3"/>
+                        <TextBlock Text="Score" Style="{StaticResource Subheader}" Grid.Column="11" Grid.Row="3"/>
+                        <ItemsControl Grid.Column="9" Grid.Row="5" ItemsSource="{Binding Leaderboardx15}" DisplayMemberPath="Index"/>
+                        <ItemsControl Grid.Column="10" Grid.Row="5" ItemsSource="{Binding Leaderboardx15}" DisplayMemberPath="Name"/>
+                        <ItemsControl Grid.Column="11" Grid.Row="5" ItemsSource="{Binding Leaderboardx15}" DisplayMemberPath="Score"/>
+                    </Grid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="4*"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer Grid.Column="1" Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding GameGallery}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DataTemplate.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Height" Value="40"/>
+                                            <Setter Property="Width" Value="65"/>
+                                            <Setter Property="Margin" Value="7"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="IsTabStop" Value="True"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.BackgroundBrush}"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataTemplate.Resources>
+                                    <Border BorderThickness="0" Height="Auto" Width="Auto" Margin="15" CornerRadius="15" Background="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.BackgroundBrush}">
+                                        <StackPanel Orientation="Vertical" Margin="25">
+                                            <TextBlock Style="{StaticResource Header}" Text="{Binding Name}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <TextBlock Style="{StaticResource Body}" Text="{Binding Mode}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <TextBlock Style="{StaticResource Body}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource PlayersConverter}">
+                                                        <Binding Path="Players"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Style="{StaticResource Body}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource WinnerConverter}">
+                                                        <Binding Path="Winner"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <Button>
+                                                <Button.Content>
+                                                    <ItemsControl>
+                                                        <TextBlock Text="▶"/>
+                                                        <TextBlock Text="{Binding Name}" Visibility="Hidden" Height="0" Width="0"/>
+                                                    </ItemsControl>
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False" Background="{Binding BackgroundBrush}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ScrollViewer Grid.Column="1">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel.Resources>
+                                <Style TargetType="StackPanel" x:Key="CheckBox">
+                                    <Setter Property="Orientation" Value="Horizontal"/>
+                                    <Setter Property="Margin" Value="20"/>
+                                    <Setter Property="Background" Value="{Binding Lighten}"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <ItemsControl>
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <StackPanel Style="{StaticResource CheckBox}">
+                                    <TextBlock Text="Freeze Highscore" Margin="20" Style="{StaticResource Subheader}"/>
+                                    <CheckBox Margin="20" IsChecked="{Binding IsHighscoreFrozen}"/>
+                                </StackPanel>
+                                <StackPanel Style="{StaticResource CheckBox}">
+                                    <TextBlock Text="Maximised" Margin="20" Style="{StaticResource Subheader}"/>
+                                    <CheckBox Margin="20" IsChecked="{Binding IsMaximised}"/>
+                                </StackPanel>
+                            </ItemsControl>
+
+                            <TextBlock Text="Sound Effects Volume" Margin="20,20,0,0" Style="{StaticResource Subheader}"/>
+                            <Slider Margin="20,10,20,20" Maximum="1" Minimum="0" Value="{Binding SFXVolume}"/>
+
+                            <TextBlock Text="Music Volume" Margin="20,20,0,0" Style="{StaticResource Subheader}"/>
+                            <Slider Margin="20,10,20,20" Maximum="1" Minimum="0" Value="{Binding MusicVolume}"/>
+
+                            <TextBlock Text="Starting Screen" Margin="20,20,0,0" Style="{StaticResource Subheader}"/>
+                            <ComboBox Width="240" HorizontalAlignment="Left" Margin="20,10,0,0" Padding="5" ItemsSource="{Binding Pages}" SelectedItem="{Binding SelectedPage}"/>
+
+                            <TextBox Visibility="Hidden" Height="159"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button" x:Key="+">
+                            <Setter Property="Width" Value="50"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="FontSize" Value="40"/>
+                            <Setter Property="Foreground" Value="{Binding Brown}"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Rectangle Width="Auto" Height="2" VerticalAlignment="Top" Fill="{Binding Brown}" Grid.Row="1"/>
+
+                    <ItemsControl ItemsSource="{Binding Playersx10}" x:Name="ItemsControlForx10">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Pages}" Click="Pagex10_OnClick">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                        <Rectangle Style="{StaticResource Highlighter}" Visibility="{Binding Visibility}" Fill="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}" Width="25"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <Button Style="{StaticResource +}" Content="+" Click="AddBtn_OnClickx10"/>
+
+                    <TabControl Grid.Row="2" Style="{StaticResource Custom}" SelectedIndex="{Binding CurrentPagex10}">
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style> 
+                            </TabItem.Resources>
+                            
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx10[0].Name}" TextChanged="NameTB1_OnTextChangedx10"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" SelectedValue="{Binding Playersx10[0].Profile}" Width="60"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx10[0].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx10[0].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn1_OnClickx10">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx10[1].Name}" TextChanged="NameTB2_OnTextChangedx10"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" SelectedValue="{Binding Playersx10[1].Profile}" Width="60"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx10[1].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx10[1].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn2_OnClickx10">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx10[2].Name}" TextChanged="NameTB3_OnTextChangedx10"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx10[2].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx10[2].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx10[2].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx10">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx10[3].Name}" TextChanged="NameTB3_OnTextChangedx10"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx10[3].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx10[3].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx10[3].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx10">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx10[4].Name}" TextChanged="NameTB3_OnTextChangedx10"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx10[4].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx10[4].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx10[4].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx10">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button" x:Key="+">
+                            <Setter Property="Width" Value="50"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="FontSize" Value="40"/>
+                            <Setter Property="Foreground" Value="{Binding Brown}"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Rectangle Width="Auto" Height="2" VerticalAlignment="Top" Fill="{Binding Brown}" Grid.Row="1"/>
+
+                    <ItemsControl ItemsSource="{Binding Playersx12}" x:Name="ItemsControlForx12">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Pages}" Click="Pagex12_OnClick">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                        <Rectangle Style="{StaticResource Highlighter}" Visibility="{Binding Visibility}" Fill="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}" Width="25"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <Button Style="{StaticResource +}" Content="+" Click="AddBtn_OnClickx12"/>
+
+                    <TabControl Grid.Row="2" Style="{StaticResource Custom}" SelectedIndex="{Binding CurrentPagex12}">
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style> 
+                            </TabItem.Resources>
+                            
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx12[0].Name}" TextChanged="NameTB1_OnTextChangedx12"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx12[0].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx12[0].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx12[0].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn1_OnClickx12">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx12[1].Name}" TextChanged="NameTB2_OnTextChangedx12"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx12[1].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx12[1].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx12[1].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn2_OnClickx12">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx12[2].Name}" TextChanged="NameTB3_OnTextChangedx12"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx12[2].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx12[2].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx12[2].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx12">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx12[3].Name}" TextChanged="NameTB3_OnTextChangedx12"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx12[3].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx12[3].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx12[3].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx12">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx12[4].Name}" TextChanged="NameTB3_OnTextChangedx12"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx12[4].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx12[4].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx12[4].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx12">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.Resources>
+                        <Style TargetType="Button" x:Key="+">
+                            <Setter Property="Width" Value="50"/>
+                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="FontSize" Value="40"/>
+                            <Setter Property="Foreground" Value="{Binding Brown}"/>
+                        </Style>
+                    </Grid.Resources>
+
+                    <Rectangle Width="Auto" Height="2" VerticalAlignment="Top" Fill="{Binding Brown}" Grid.Row="1"/>
+
+                    <ItemsControl ItemsSource="{Binding Playersx15}" x:Name="ItemsControlForx15">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{StaticResource Pages}" Click="Pagex15_OnClick">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Name}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                        <Rectangle Style="{StaticResource Highlighter}" Visibility="{Binding Visibility}" Fill="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}" Width="25"/>
+                                    </StackPanel>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+
+                    <Button Style="{StaticResource +}" Content="+" Click="AddBtn_OnClickx15"/>
+
+                    <TabControl Grid.Row="2" Style="{StaticResource Custom}" SelectedIndex="{Binding CurrentPagex15}">
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx15[0].Name}" TextChanged="NameTB1_OnTextChangedx15"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx15[0].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx15[0].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx15[0].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn1_OnClickx15">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx15[1].Name}" TextChanged="NameTB2_OnTextChangedx15"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx15[1].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx15[1].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx15[1].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn2_OnClickx15">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx15[2].Name}" TextChanged="NameTB3_OnTextChangedx15"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx15[2].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx15[2].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx15[2].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx15">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx15[3].Name}" TextChanged="NameTB3_OnTextChangedx15"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx15[3].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx15[3].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx15[3].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx15">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Style="{StaticResource Headerless}">
+                            <TabItem.Resources>
+                                <Style TargetType="Border" x:Key="Custom">
+                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=DataContext.BackgroundBrush}"/>
+                                    <Setter Property="Width" Value="600"/>
+                                    <Setter Property="Height" Value="320"/>
+                                    <Setter Property="CornerRadius" Value="25"/>
+                                </Style>
+                            </TabItem.Resources>
+
+                            <Grid ShowGridLines="False">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <Border Grid.Column="1" Grid.Row="1" Style="{StaticResource Custom}">
+                                    <WrapPanel Margin="30">
+                                        <WrapPanel.Resources>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Foreground" Value="{Binding Brown}"/>
+                                                <Setter Property="FontFamily" Value="Segoe UI"/>
+                                                <Setter Property="FontSize" Value="15"/>
+                                                <Setter Property="Margin" Value="0,0,0,10"/>
+                                            </Style>
+                                            <Style TargetType="TextBox">
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Padding" Value="9"/>
+                                            </Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Width" Value="Auto"/>
+                                                <Setter Property="Padding" Value="4"/>
+                                            </Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Height" Value="50"/>
+                                                <Setter Property="Width" Value="150"/>
+                                                <Setter Property="Margin" Value="10,25,10,10"/>
+                                                <Setter Property="Background" Value="{Binding Lighten}"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                            </Style>
+                                        </WrapPanel.Resources>
+
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="NAME"/>
+                                            <TextBox Text="{Binding Playersx15[4].Name}" TextChanged="NameTB3_OnTextChangedx15"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="PROFILE"/>
+                                            <ComboBox ItemsSource="{Binding ProfilePictures}" Width="60" SelectedValue="{Binding Playersx15[4].Profile}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="BOT"/>
+                                            <CheckBox IsChecked="{Binding Playersx15[4].IsBot}"/>
+                                        </StackPanel>
+                                        <StackPanel Margin="10">
+                                            <TextBlock Text="VICTORY SONG"/>
+                                            <ComboBox ItemsSource="{Binding VictorySongs}" SelectedValue="{Binding Playersx15[4].VictorySong}" Width="480"/>
+                                        </StackPanel>
+                                        <Button Click="RemoveBtn3_OnClickx15">
+                                            <TextBlock Text="Remove" Margin="0,-3,0,0"/>
+                                        </Button>
+                                    </WrapPanel>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+            </TabItem>
+
+            <TabItem Style="{StaticResource Headerless}">
+                <Grid ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="4*"/>
+                    </Grid.RowDefinitions>
+
+                    <ScrollViewer Grid.Column="1" Grid.Row="1">
+                        <ItemsControl ItemsSource="{Binding GameGallery}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DataTemplate.Resources>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Height" Value="40"/>
+                                            <Setter Property="Width" Value="65"/>
+                                            <Setter Property="Margin" Value="7"/>
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <Setter Property="HorizontalAlignment" Value="Left"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Setter Property="IsTabStop" Value="True"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.BackgroundBrush}"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataTemplate.Resources>
+                                    <Border BorderThickness="0" Height="Auto" Width="Auto" Margin="15" CornerRadius="15" Background="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.BackgroundBrush}">
+                                        <StackPanel Orientation="Vertical" Margin="25">
+                                            <TextBlock Style="{StaticResource Header}" Text="{Binding Name}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <TextBlock Style="{StaticResource Body}" Text="{Binding Mode}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}"/>
+                                            <TextBlock Style="{StaticResource Body}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource PlayersConverter}">
+                                                        <Binding Path="Players"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Style="{StaticResource Body}" Foreground="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.Brown}">
+                                                <TextBlock.Text>
+                                                    <MultiBinding Converter="{StaticResource WinnerConverter}">
+                                                        <Binding Path="Winner"/>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <Button>
+                                                <Button.Content>
+                                                    <ItemsControl>
+                                                        <TextBlock Text="▶"/>
+                                                        <TextBlock Text="{Binding Name}" Visibility="Hidden" Height="0" Width="0"/>
+                                                    </ItemsControl>
+                                                </Button.Content>
+                                            </Button>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
